@@ -39,6 +39,13 @@ function Calculator({ workouts, allowSound }) {
     [duration, allowSound] // hook to load side-effect sound when the duration state variable changes
   );
 
+  useEffect(
+    function () {
+      document.title = `Your ${number}-exercise workout`;
+    },
+    [number]
+  );
+
   const mins = Math.floor(duration);
   const seconds = (duration - mins) * 60;
 
