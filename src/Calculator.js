@@ -14,8 +14,8 @@ function Calculator({ workouts, allowSound }) {
     function () {
       setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
     },
-    [number, sets, speed, durationBreak]
-  ); // whenever these state variables change run this effect function
+    [number, sets, speed, durationBreak] // only do this when you have so many state variables that effect the duration
+  ); // whenever any of these state variables change -> run this effect function
 
   const mins = Math.floor(duration);
   const seconds = (duration - mins) * 60;
@@ -25,6 +25,14 @@ function Calculator({ workouts, allowSound }) {
     const sound = new Audio(clickSound);
     sound.play();
   };
+
+  function handleInc() {
+    setDuration((duration) => Math.floor(duration) + 1);
+  }
+
+  function handleDec() {
+    setDuration((duration) => (duration > 1 ? Math.ceil(duration) - 1 : 0));
+  }
 
   return (
     <>
@@ -77,13 +85,13 @@ function Calculator({ workouts, allowSound }) {
         </div>
       </form>
       <section>
-        <button onClick={() => {}}>–</button>
+        <button onClick={handleDec}>–</button>
         <p>
           {mins < 10 && "0"}
           {mins}:{seconds < 10 && "0"}
           {seconds}
         </p>
-        <button onClick={() => {}}>+</button>
+        <button onClick={handleInc}>+</button>
       </section>
     </>
   );
