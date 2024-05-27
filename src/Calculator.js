@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import clickSound from "./ClickSound.m4a";
 
 function Calculator({ workouts, allowSound }) {
@@ -10,28 +10,46 @@ function Calculator({ workouts, allowSound }) {
   // const duration = (number * sets * speed) / 60 + (sets - 1) * durationBreak;
   const [duration, setDuration] = useState(0);
 
+  // const playSound = useCallback(
+  //   function () {
+  //     if (!allowSound) return;
+  //     const sound = new Audio(clickSound);
+  //     sound.play();
+  //   },
+  //   [duration]
+  // );
+
   useEffect(
     function () {
       setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
+      // playSound();
     },
     [number, sets, speed, durationBreak] // only do this when you have so many state variables that effect the duration
   ); // whenever any of these state variables change -> run this effect function
 
+  useEffect(
+    function () {
+      const playSound = function () {
+        if (!allowSound) return;
+        const sound = new Audio(clickSound);
+        sound.play();
+      };
+      playSound();
+    },
+    [duration, allowSound] // hook to load side-effect sound when the duration state variable changes
+  );
+
   const mins = Math.floor(duration);
   const seconds = (duration - mins) * 60;
 
-  const playSound = function () {
-    if (!allowSound) return;
-    const sound = new Audio(clickSound);
-    sound.play();
-  };
-
   function handleInc() {
     setDuration((duration) => Math.floor(duration) + 1);
+    // playSound();
   }
 
   function handleDec() {
     setDuration((duration) => (duration > 1 ? Math.ceil(duration) - 1 : 0));
+    // playSound();
   }
 
   return (
